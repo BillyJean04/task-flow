@@ -13,6 +13,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2.4.0
       - name: Install deps
         run: pnpm install
       - name: Lint
@@ -29,6 +31,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2.4.0
       - name: Install deps
         run: pnpm install
       - name: Typecheck
@@ -45,6 +49,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2.4.0
       - name: Install deps
         run: pnpm install
       - name: build project
