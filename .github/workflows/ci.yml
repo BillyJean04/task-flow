@@ -1,0 +1,53 @@
+name: ci
+on: [push]
+jobs:
+  lint:
+    name: "Lint"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ 19.x ]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Starting nodejs ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install deps
+        run: pnpm install
+      - name: Lint
+        run: pnpm lint
+  prebuild:
+    name: "Typecheck"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ 19.x ]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Starting nodejs ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install deps
+        run: pnpm install
+      - name: Typecheck
+        run: pnpm typecheck
+  tests:
+    name: "Tests"
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ 19.x ]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Starting nodejs ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install deps
+        run: pnpm install
+      - name: build project
+        run: pnpm build
+      - name: unit test
+        run: pnpm test
