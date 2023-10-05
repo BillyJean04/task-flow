@@ -1,8 +1,12 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 require("dotenv").config();
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const fs = require("fs");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const path = require("path");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { fetch } = require("cross-undici-fetch");
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { buildClientSchema, getIntrospectionQuery, printSchema } = require("graphql");
 
 function fetchGraphQLSchema(url, options) {
