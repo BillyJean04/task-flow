@@ -45,7 +45,7 @@ export const useRoutes = () => {
     `;
 
     const { loading, error, data } = useQuery(GET_CATEGORIES, {
-        variables: { userId: session.user.id },
+        variables: { userId: session?.user.id },
     });
 
     const lists: Lists = useMemo(() => {
@@ -89,7 +89,7 @@ export const useRoutes = () => {
                     return {
                         label: list.node.name,
                         href: `/dashboard/${list.node.name?.toLowerCase()}`,
-                        icon: RiFileList3Line,
+                        icon: list.node?.image,
                         active: searchParams.getAll("lists")[0]?.split("-").includes(list.node.name),
                     };
                 }),
@@ -97,7 +97,7 @@ export const useRoutes = () => {
                     return {
                         label: tag.node.name,
                         href: `/dashboard/${tag.node.name?.toLowerCase()}`,
-                        icon: RiFileList3Line,
+                        icon: tag.node?.image,
                         active: searchParams.getAll("tags")[0]?.split("-").includes(tag.node.name),
                     };
                 }),

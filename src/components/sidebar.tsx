@@ -11,6 +11,10 @@ const Sidebar: FC = () => {
     const { routes, loading, error } = useRoutes();
     const queryString = useQueryString();
 
+    if (error) {
+        console.log(error.message);
+    }
+
     if (loading) {
         return <>Loading</>;
     }
@@ -41,21 +45,28 @@ const Sidebar: FC = () => {
                     <div className="flex flex-col gap-2 ">
                         {routes.map(
                             (route) =>
-                                route.lists?.map(({ label, href, icon: Icon, active }) => {
-                                    return (
-                                        <div
-                                            onClick={() => {
-                                                queryString("lists", label);
-                                            }}
-                                            className={`${
-                                                active ? "font-bold" : null
-                                            } items-center text-[#414141] gap-3 pr-4 flex cursor-pointer`}
-                                            key={label}
-                                        >
-                                            {label}
-                                        </div>
-                                    );
-                                }),
+                                route.lists?.map(
+                                    ({
+                                        label,
+                                        // icon,
+                                        active,
+                                    }) => {
+                                        return (
+                                            <div
+                                                onClick={() => {
+                                                    queryString("lists", label);
+                                                }}
+                                                className={`${
+                                                    active ? "font-bold" : null
+                                                } items-center text-[#414141] gap-3 pr-4 flex cursor-pointer`}
+                                                key={label}
+                                            >
+                                                {/*{icon && <Image image />}*/}
+                                                {label}
+                                            </div>
+                                        );
+                                    },
+                                ),
                         )}
                     </div>
                 </div>
@@ -64,21 +75,28 @@ const Sidebar: FC = () => {
                     <div className="flex flex-col gap-2">
                         {routes.map(
                             (route) =>
-                                route.tags?.map(({ label, href, icon: Icon, active }) => {
-                                    return (
-                                        <div
-                                            onClick={() => {
-                                                queryString("tags", label);
-                                            }}
-                                            className={`${
-                                                active ? "font-bold" : null
-                                            } items-center text-[#414141] gap-3 pr-4 flex cursor-pointer`}
-                                            key={label}
-                                        >
-                                            {label}
-                                        </div>
-                                    );
-                                }),
+                                route.tags?.map(
+                                    ({
+                                        label,
+                                        // icon: Icon,
+                                        active,
+                                    }) => {
+                                        return (
+                                            <div
+                                                onClick={() => {
+                                                    queryString("tags", label);
+                                                }}
+                                                className={`${
+                                                    active ? "font-bold" : null
+                                                } items-center text-[#414141] gap-3 pr-4 flex cursor-pointer`}
+                                                key={label}
+                                            >
+                                                {/*<Icon size="1.2rem" />*/}
+                                                {label}
+                                            </div>
+                                        );
+                                    },
+                                ),
                         )}
                     </div>
                 </div>
