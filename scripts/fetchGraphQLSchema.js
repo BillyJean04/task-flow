@@ -38,6 +38,5 @@ const filePath = path.join(__dirname, "../graphql/schema/", "schema.graphql");
 fetchGraphQLSchema(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/graphql/v1`, {
     readable: true,
 }).then((schema) => {
-    console.log(schema);
     fs.writeFileSync(filePath, schema, "utf-8");
 });
