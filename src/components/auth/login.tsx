@@ -11,7 +11,7 @@ const Login = () => {
     const router = useRouter();
     useEffect(() => {
         if (user) {
-            router.push("/dashboard");
+            router.push("/dashboard/all-tasks");
         }
     }, [router, user]);
     return (
