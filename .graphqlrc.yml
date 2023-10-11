@@ -1,9 +1,9 @@
 schema: ./graphql/schema/schema.graphql
-documents: ./app/**/*.{graphql,js,ts,jsx,tsx}
+documents: ./src/**/*.{graphql,js,ts,jsx,tsx}
 extensions:
   codegen:
     generates:
-      ./app/gql:
+      ./src/gql:
         preset: gql-tag-operations-preset
     hooks:
       afterOneFileWrite:

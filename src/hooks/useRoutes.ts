@@ -3,8 +3,9 @@ import { useMemo } from "react";
 import { AiOutlineCalendar } from "react-icons/ai";
 import { IoTodayOutline } from "react-icons/io5";
 import { RiFileList3Line } from "react-icons/ri";
-import { gql, useQuery } from "@apollo/client";
 import { useSuspendSession } from "@/hooks/useSuspendSession";
+import { gql } from "@/gql";
+import { useQuery } from "@apollo/client";
 
 type Lists = {
     node: {
@@ -20,29 +21,31 @@ type Tags = {
     };
 }[];
 
-export const useRoutes = () => {
-    const pathname = usePathname();
-    const session = useSuspendSession();
-    const searchParams = useSearchParams()!;
-
-    const GET_CATEGORIES = gql`
-        query GetCategories($userId: UUID!) {
-            listsCollection(filter: { user_id: { eq: $userId } }) {
-                edges {
-                    node {
-                        name
-                    }
-                }
-            }
-            tagsCollection(filter: { user_id: { eq: $userId } }) {
-                edges {
-                    node {
-                        name
-                    }
+const GET_CATEGORIES = gql(
+    `
+    query GetCategories($userId: UUID!) {
+        listsCollection(filter: { user_id: { eq: $userId } }) {
+            edges {
+                node {
+                    name
                 }
             }
         }
-    `;
+        tagsCollection(filter: { user_id: { eq: $userId } }) {
+            edges {
+                node {
+                    name
+                }
+            }
+        }
+    }
+`,
+);
+
+export const useRoutes = () => {
+    const pathname = usePathname();
+    const searchParams = useSearchParams()!;
+    const session = useSuspendSession();
 
     const { loading, error, data } = useQuery(GET_CATEGORIES, {
         variables: { userId: session?.user.id },
@@ -50,14 +53,14 @@ export const useRoutes = () => {
 
     const lists: Lists = useMemo(() => {
         if (!loading) {
-            return data.listsCollection.edges;
+            return data?.listsCollection?.edges || [];
         }
         return [];
     }, [data, loading]);
 
     const tags: Tags = useMemo(() => {
         if (!loading) {
-            return data.tagsCollection.edges;
+            return data?.tagsCollection?.edges || [];
         }
         return [];
     }, [data, loading]);
@@ -103,6 +106,7 @@ export const useRoutes = () => {
                 }),
             },
         ],
+
         [pathname, searchParams, tags, lists],
     );
     return {

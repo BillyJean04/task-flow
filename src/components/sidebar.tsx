@@ -1,14 +1,15 @@
 "use client";
 
 import { FC } from "react";
-import { useRoutes } from "@/hooks/useRoutes";
 import Link from "next/link";
 import { AiOutlineCheckCircle } from "react-icons/ai";
 import { BsTrash } from "react-icons/bs";
 import { useQueryString } from "@/hooks/useQueryString";
+import { useRoutes } from "@/hooks/useRoutes";
 
 const Sidebar: FC = () => {
     const { routes, loading, error } = useRoutes();
+
     const queryString = useQueryString();
 
     if (error) {
