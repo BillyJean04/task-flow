@@ -39,6 +39,8 @@ jobs:
           version: 8
       - name: Install deps
         run: pnpm install
+      - name: graphql compile
+        run: pnpm compile
       - name: Typecheck
         run: pnpm typecheck
   tests:
