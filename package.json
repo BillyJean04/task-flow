@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "pnpm compile & next build",
     "start": "next start",
     "compile": "graphql-codegen",
     "lint": "next lint",
@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.8.4",
+    "@headlessui/react": "^1.7.17",
     "@supabase/auth-helpers-nextjs": "^0.8.1",
     "@supabase/auth-ui-react": "^0.4.5",
     "@supabase/auth-ui-shared": "^0.1.7",

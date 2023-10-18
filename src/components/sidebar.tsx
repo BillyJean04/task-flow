@@ -8,6 +8,7 @@ import { useQueryString } from "@/hooks/useQueryString";
 import { useRoutes } from "@/hooks/useRoutes";
 import { usePathname, useRouter } from "next/navigation";
 import SkeletonRectangle from "@/components/skeleton";
+import { PiTagChevron } from "react-icons/pi";
 
 const Sidebar: FC = () => {
     const { routes, loading, error } = useRoutes();
@@ -88,7 +89,7 @@ const Sidebar: FC = () => {
                                 ({
                                     label,
                                     // icon: Icon,
-
+                                    color,
                                     active,
                                 }) => {
                                     return (
@@ -101,7 +102,7 @@ const Sidebar: FC = () => {
                                             } items-center text-[#414141] gap-3 pr-4 flex cursor-pointer`}
                                             key={label}
                                         >
-                                            {/*<Icon size="1.2rem" />*/}
+                                            <PiTagChevron size="1.35rem" color={color} />
                                             {label}
                                         </div>
                                     );
