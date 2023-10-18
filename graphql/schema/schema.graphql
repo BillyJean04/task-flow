@@ -40,6 +40,77 @@ input BooleanFilter {
   is: FilterIs
 }
 
+type Checklists implements Node {
+  """Globally Unique Record Identifier"""
+  nodeId: ID!
+  checklist_id: BigInt!
+  task_id: BigInt
+  item_text: String!
+  completed: Boolean
+  tasks: Tasks
+}
+
+type ChecklistsConnection {
+  edges: [ChecklistsEdge!]!
+  pageInfo: PageInfo!
+}
+
+type ChecklistsDeleteResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [Checklists!]!
+}
+
+type ChecklistsEdge {
+  cursor: String!
+  node: Checklists!
+}
+
+input ChecklistsFilter {
+  checklist_id: BigIntFilter
+  task_id: BigIntFilter
+  item_text: StringFilter
+  completed: BooleanFilter
+  nodeId: IDFilter
+}
+
+input ChecklistsInsertInput {
+  task_id: BigInt
+  item_text: String
+  completed: Boolean
+}
+
+type ChecklistsInsertResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [Checklists!]!
+}
+
+input ChecklistsOrderBy {
+  checklist_id: OrderByDirection
+  task_id: OrderByDirection
+  item_text: OrderByDirection
+  completed: OrderByDirection
+}
+
+input ChecklistsUpdateInput {
+  task_id: BigInt
+  item_text: String
+  completed: Boolean
+}
+
+type ChecklistsUpdateResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [Checklists!]!
+}
+
 """
 An opaque string using for tracking a position in results during pagination
 """
@@ -130,6 +201,25 @@ type Lists implements Node {
   name: String!
   img: String
   created_at: Datetime!
+  taskListsCollection(
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: TaskListsFilter
+
+    """Sort order to apply to the collection"""
+    orderBy: [TaskListsOrderBy!]
+  ): TaskListsConnection
 }
 
 type ListsConnection {
@@ -199,6 +289,17 @@ type ListsUpdateResponse {
 
 """The root type for creating and mutating data"""
 type Mutation {
+  """Deletes zero or more records from the `Checklists` collection"""
+  deleteFromChecklistsCollection(
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: ChecklistsFilter
+
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+  ): ChecklistsDeleteResponse!
+
   """Deletes zero or more records from the `Lists` collection"""
   deleteFromListsCollection(
     """Restricts the mutation's impact to records matching the criteria"""
@@ -221,11 +322,72 @@ type Mutation {
     atMost: Int! = 1
   ): TagsDeleteResponse!
 
+  """Deletes zero or more records from the `TaskLists` collection"""
+  deleteFromTaskListsCollection(
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: TaskListsFilter
+
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+  ): TaskListsDeleteResponse!
+
+  """Deletes zero or more records from the `TaskTags` collection"""
+  deleteFromTaskTagsCollection(
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: TaskTagsFilter
+
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+  ): TaskTagsDeleteResponse!
+
+  """Deletes zero or more records from the `Tasks` collection"""
+  deleteFromTasksCollection(
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: TasksFilter
+
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+  ): TasksDeleteResponse!
+
+  """Adds one or more `Checklists` records to the collection"""
+  insertIntoChecklistsCollection(objects: [ChecklistsInsertInput!]!): ChecklistsInsertResponse
+
   """Adds one or more `Lists` records to the collection"""
   insertIntoListsCollection(objects: [ListsInsertInput!]!): ListsInsertResponse
 
   """Adds one or more `Tags` records to the collection"""
   insertIntoTagsCollection(objects: [TagsInsertInput!]!): TagsInsertResponse
+
+  """Adds one or more `TaskLists` records to the collection"""
+  insertIntoTaskListsCollection(objects: [TaskListsInsertInput!]!): TaskListsInsertResponse
+
+  """Adds one or more `TaskTags` records to the collection"""
+  insertIntoTaskTagsCollection(objects: [TaskTagsInsertInput!]!): TaskTagsInsertResponse
+
+  """Adds one or more `Tasks` records to the collection"""
+  insertIntoTasksCollection(objects: [TasksInsertInput!]!): TasksInsertResponse
+
+  """Updates zero or more records in the `Checklists` collection"""
+  updateChecklistsCollection(
+    """
+    Fields that are set will be updated for all records matching the `filter`
+    """
+    set: ChecklistsUpdateInput!
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: ChecklistsFilter
+
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+  ): ChecklistsUpdateResponse!
 
   """Updates zero or more records in the `Lists` collection"""
   updateListsCollection(
@@ -258,6 +420,54 @@ type Mutation {
     """
     atMost: Int! = 1
   ): TagsUpdateResponse!
+
+  """Updates zero or more records in the `TaskLists` collection"""
+  updateTaskListsCollection(
+    """
+    Fields that are set will be updated for all records matching the `filter`
+    """
+    set: TaskListsUpdateInput!
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: TaskListsFilter
+
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+  ): TaskListsUpdateResponse!
+
+  """Updates zero or more records in the `TaskTags` collection"""
+  updateTaskTagsCollection(
+    """
+    Fields that are set will be updated for all records matching the `filter`
+    """
+    set: TaskTagsUpdateInput!
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: TaskTagsFilter
+
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+  ): TaskTagsUpdateResponse!
+
+  """Updates zero or more records in the `Tasks` collection"""
+  updateTasksCollection(
+    """
+    Fields that are set will be updated for all records matching the `filter`
+    """
+    set: TasksUpdateInput!
+
+    """Restricts the mutation's impact to records matching the criteria"""
+    filter: TasksFilter
+
+    """
+    The maximum number of records in the collection permitted to be affected
+    """
+    atMost: Int! = 1
+  ): TasksUpdateResponse!
 }
 
 interface Node {
@@ -300,6 +510,27 @@ type PageInfo {
 
 """The root type for querying data"""
 type Query {
+  """A pagable collection of type `Checklists`"""
+  checklistsCollection(
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: ChecklistsFilter
+
+    """Sort order to apply to the collection"""
+    orderBy: [ChecklistsOrderBy!]
+  ): ChecklistsConnection
+
   """A pagable collection of type `Lists`"""
   listsCollection(
     """Query the first `n` records in the collection"""
@@ -347,6 +578,69 @@ type Query {
     """Sort order to apply to the collection"""
     orderBy: [TagsOrderBy!]
   ): TagsConnection
+
+  """A pagable collection of type `TaskLists`"""
+  taskListsCollection(
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: TaskListsFilter
+
+    """Sort order to apply to the collection"""
+    orderBy: [TaskListsOrderBy!]
+  ): TaskListsConnection
+
+  """A pagable collection of type `TaskTags`"""
+  taskTagsCollection(
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: TaskTagsFilter
+
+    """Sort order to apply to the collection"""
+    orderBy: [TaskTagsOrderBy!]
+  ): TaskTagsConnection
+
+  """A pagable collection of type `Tasks`"""
+  tasksCollection(
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: TasksFilter
+
+    """Sort order to apply to the collection"""
+    orderBy: [TasksOrderBy!]
+  ): TasksConnection
 }
 
 """
@@ -374,8 +668,27 @@ type Tags implements Node {
   id: BigInt!
   user_id: UUID!
   name: String!
-  img: String
+  color: String
   created_at: Datetime!
+  taskTagsCollection(
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: TaskTagsFilter
+
+    """Sort order to apply to the collection"""
+    orderBy: [TaskTagsOrderBy!]
+  ): TaskTagsConnection
 }
 
 type TagsConnection {
@@ -400,7 +713,7 @@ input TagsFilter {
   id: BigIntFilter
   user_id: UUIDFilter
   name: StringFilter
-  img: StringFilter
+  color: StringFilter
   created_at: DatetimeFilter
   nodeId: IDFilter
 }
@@ -408,7 +721,7 @@ input TagsFilter {
 input TagsInsertInput {
   user_id: UUID
   name: String
-  img: String
+  color: String
   created_at: Datetime
 }
 
@@ -424,14 +737,14 @@ input TagsOrderBy {
   id: OrderByDirection
   user_id: OrderByDirection
   name: OrderByDirection
-  img: OrderByDirection
+  color: OrderByDirection
   created_at: OrderByDirection
 }
 
 input TagsUpdateInput {
   user_id: UUID
   name: String
-  img: String
+  color: String
   created_at: Datetime
 }
 
@@ -441,6 +754,277 @@ type TagsUpdateResponse {
 
   """Array of records impacted by the mutation"""
   records: [Tags!]!
+}
+
+type TaskLists implements Node {
+  """Globally Unique Record Identifier"""
+  nodeId: ID!
+  id: BigInt!
+  task_id: BigInt!
+  list_id: BigInt!
+  tasks: Tasks!
+  lists: Lists!
+}
+
+type TaskListsConnection {
+  edges: [TaskListsEdge!]!
+  pageInfo: PageInfo!
+}
+
+type TaskListsDeleteResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [TaskLists!]!
+}
+
+type TaskListsEdge {
+  cursor: String!
+  node: TaskLists!
+}
+
+input TaskListsFilter {
+  id: BigIntFilter
+  task_id: BigIntFilter
+  list_id: BigIntFilter
+  nodeId: IDFilter
+}
+
+input TaskListsInsertInput {
+  task_id: BigInt
+  list_id: BigInt
+}
+
+type TaskListsInsertResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [TaskLists!]!
+}
+
+input TaskListsOrderBy {
+  id: OrderByDirection
+  task_id: OrderByDirection
+  list_id: OrderByDirection
+}
+
+input TaskListsUpdateInput {
+  task_id: BigInt
+  list_id: BigInt
+}
+
+type TaskListsUpdateResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [TaskLists!]!
+}
+
+type TaskTags implements Node {
+  """Globally Unique Record Identifier"""
+  nodeId: ID!
+  id: BigInt!
+  task_id: BigInt
+  tag_id: BigInt
+  tasks: Tasks
+  tags: Tags
+}
+
+type TaskTagsConnection {
+  edges: [TaskTagsEdge!]!
+  pageInfo: PageInfo!
+}
+
+type TaskTagsDeleteResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [TaskTags!]!
+}
+
+type TaskTagsEdge {
+  cursor: String!
+  node: TaskTags!
+}
+
+input TaskTagsFilter {
+  id: BigIntFilter
+  task_id: BigIntFilter
+  tag_id: BigIntFilter
+  nodeId: IDFilter
+}
+
+input TaskTagsInsertInput {
+  task_id: BigInt
+  tag_id: BigInt
+}
+
+type TaskTagsInsertResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [TaskTags!]!
+}
+
+input TaskTagsOrderBy {
+  id: OrderByDirection
+  task_id: OrderByDirection
+  tag_id: OrderByDirection
+}
+
+input TaskTagsUpdateInput {
+  task_id: BigInt
+  tag_id: BigInt
+}
+
+type TaskTagsUpdateResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [TaskTags!]!
+}
+
+type Tasks implements Node {
+  """Globally Unique Record Identifier"""
+  nodeId: ID!
+  id: BigInt!
+  user_id: UUID!
+  title: String!
+  description: String
+  completed: Boolean
+  created_at: Datetime!
+  taskTagsCollection(
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: TaskTagsFilter
+
+    """Sort order to apply to the collection"""
+    orderBy: [TaskTagsOrderBy!]
+  ): TaskTagsConnection
+  checklistsCollection(
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: ChecklistsFilter
+
+    """Sort order to apply to the collection"""
+    orderBy: [ChecklistsOrderBy!]
+  ): ChecklistsConnection
+  taskListsCollection(
+    """Query the first `n` records in the collection"""
+    first: Int
+
+    """Query the last `n` records in the collection"""
+    last: Int
+
+    """Query values in the collection before the provided cursor"""
+    before: Cursor
+
+    """Query values in the collection after the provided cursor"""
+    after: Cursor
+
+    """Filters to apply to the results set when querying from the collection"""
+    filter: TaskListsFilter
+
+    """Sort order to apply to the collection"""
+    orderBy: [TaskListsOrderBy!]
+  ): TaskListsConnection
+}
+
+type TasksConnection {
+  edges: [TasksEdge!]!
+  pageInfo: PageInfo!
+}
+
+type TasksDeleteResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [Tasks!]!
+}
+
+type TasksEdge {
+  cursor: String!
+  node: Tasks!
+}
+
+input TasksFilter {
+  id: BigIntFilter
+  user_id: UUIDFilter
+  title: StringFilter
+  description: StringFilter
+  completed: BooleanFilter
+  created_at: DatetimeFilter
+  nodeId: IDFilter
+}
+
+input TasksInsertInput {
+  user_id: UUID
+  title: String
+  description: String
+  completed: Boolean
+  created_at: Datetime
+}
+
+type TasksInsertResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [Tasks!]!
+}
+
+input TasksOrderBy {
+  id: OrderByDirection
+  user_id: OrderByDirection
+  title: OrderByDirection
+  description: OrderByDirection
+  completed: OrderByDirection
+  created_at: OrderByDirection
+}
+
+input TasksUpdateInput {
+  user_id: UUID
+  title: String
+  description: String
+  completed: Boolean
+  created_at: Datetime
+}
+
+type TasksUpdateResponse {
+  """Count of the records impacted by the mutation"""
+  affectedCount: Int!
+
+  """Array of records impacted by the mutation"""
+  records: [Tasks!]!
 }
 
 """A time without date information"""

@@ -7,34 +7,40 @@ import { useSuspendSession } from "@/hooks/useSuspendSession";
 import { gql } from "@/gql";
 import { useQuery } from "@apollo/client";
 
-type Lists = {
+export type Lists = {
     node: {
+        id: number;
         name: string;
-        image?: string;
+        img?: string | null;
     };
-}[];
+};
 
-type Tags = {
+export type Tags = {
     node: {
+        id: number;
         name: string;
-        image?: string;
+        color?: string | null;
     };
-}[];
+};
 
-const GET_CATEGORIES = gql(
+export const GET_CATEGORIES = gql(
     `
     query GetCategories($userId: UUID!) {
         listsCollection(filter: { user_id: { eq: $userId } }) {
             edges {
                 node {
+                    id
                     name
+                    img
                 }
             }
         }
         tagsCollection(filter: { user_id: { eq: $userId } }) {
             edges {
                 node {
+                    id
                     name
+                    color
                 }
             }
         }
@@ -51,14 +57,14 @@ export const useRoutes = () => {
         variables: { userId: session?.user.id },
     });
 
-    const lists: Lists = useMemo(() => {
+    const lists: Lists[] = useMemo(() => {
         if (!loading) {
             return data?.listsCollection?.edges || [];
         }
         return [];
     }, [data, loading]);
 
-    const tags: Tags = useMemo(() => {
+    const tags: Tags[] = useMemo(() => {
         if (!loading) {
             return data?.tagsCollection?.edges || [];
         }
@@ -92,7 +98,7 @@ export const useRoutes = () => {
                     return {
                         label: list.node.name,
                         href: `/dashboard/${list.node.name?.toLowerCase()}`,
-                        icon: list.node?.image,
+                        icon: list.node?.img,
                         active: searchParams.getAll("lists")[0]?.split("-").includes(list.node.name),
                     };
                 }),
@@ -100,7 +106,7 @@ export const useRoutes = () => {
                     return {
                         label: tag.node.name,
                         href: `/dashboard/${tag.node.name?.toLowerCase()}`,
-                        icon: tag.node?.image,
+                        color: tag.node?.color,
                         active: searchParams.getAll("tags")[0]?.split("-").includes(tag.node.name),
                     };
                 }),
