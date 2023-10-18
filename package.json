@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "pnpm compile & next build",
     "start": "next start",
     "compile": "graphql-codegen",
     "lint": "next lint",
