@@ -1,0 +1,8 @@
+mutation insertIntoTaskLists($type: [TaskListsInsertInput!]!) {
+    insertIntoTaskListsCollection(objects: $type) {
+        affectedCount
+        records {
+            id
+        }
+    }
+}

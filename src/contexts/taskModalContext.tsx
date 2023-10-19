@@ -10,7 +10,6 @@ export const TaskContext = createContext<TaskContextType>({
     isOpen: false,
     setIsOpen: () => {},
 });
-export const TasksDispatchContext = createContext(null);
 
 export default function TaskModalProvider({ children }: { children: ReactNode }) {
     const [isOpen, setIsOpen] = useState(false);

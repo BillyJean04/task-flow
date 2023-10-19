@@ -1,38 +1,9 @@
 "use client";
 
-import { DocumentType, gql } from "@/gql";
 import { convertEmojiFromCode, hexToRGBA } from "@/lib/utils";
+import { Tasks } from "@/gql/graphql";
 
-const TaskFragment = gql(/* GraphQL */ `
-    fragment TaskFragment on Tasks {
-        title
-        description
-        taskListsCollection {
-            edges {
-                cursor
-                node {
-                    lists {
-                        name
-                        img
-                    }
-                }
-            }
-        }
-        taskTagsCollection {
-            edges {
-                cursor
-                node {
-                    tags {
-                        name
-                        color
-                    }
-                }
-            }
-        }
-    }
-`);
-
-const TaskBox = (props: { task: DocumentType<typeof TaskFragment> }) => {
+const TaskBox = (props: { task: Tasks }) => {
     const list = props.task.taskListsCollection?.edges[0];
     const tag = props.task.taskTagsCollection?.edges[0];
 
@@ -52,7 +23,7 @@ const TaskBox = (props: { task: DocumentType<typeof TaskFragment> }) => {
                                     }}
                                     className={"font-bold px-[5px] py-[3px] rounded"}
                                 >
-                                    {tag?.node.tags?.name}
+                                    {tag?.node.tags?.name}s{" "}
                                 </div>
                             </div>
                         )}

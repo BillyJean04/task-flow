@@ -1,49 +1,12 @@
 "use client";
 
 import TaskBox from "@/components/taskBox";
-import { gql } from "@/gql";
 import SkeletonRectangle from "@/components/skeleton";
 import { useAuthQuery } from "@/hooks/useAuthQuery";
-import { TasksEdge } from "@/gql/graphql";
-
-export const GET_TASKS = gql(
-    ` query GetTasks($userId: UUID!) {
-    tasksCollection(filter: { user_id: { eq: $userId } }) {
-        edges {
-            cursor
-            node {
-                title
-                description
-                taskListsCollection {
-                    edges {
-                        cursor
-                        node {
-                            lists {
-                                img
-                                name
-                            }
-                        }
-                    }
-                }
-                taskTagsCollection {
-                    edges {
-                        cursor
-                        node {
-                            tags {
-                                color
-                                name
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}`,
-);
+import { GetTasksDocument, TasksEdge } from "@/gql/graphql";
 
 const TaskList = () => {
-    const { data, loading } = useAuthQuery(GET_TASKS);
+    const { data, loading } = useAuthQuery(GetTasksDocument);
 
     return (
         <div className="flex gap-5 flex-wrap ">
