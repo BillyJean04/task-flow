@@ -1,116 +1,35 @@
 "use client";
 
-import Modal from "@/components/modal/modal";
-import { TaskContext } from "@/contexts/taskModalContext";
 import { useContext, useReducer } from "react";
-import { gql } from "@/gql";
-import { Listbox } from "@headlessui/react";
+import { TaskContext } from "@/contexts/taskModalContext";
 import { useAuthQuery } from "@/hooks/useAuthQuery";
-import { GET_CATEGORIES, Lists, Tags } from "@/hooks/useRoutes";
-import { convertEmojiFromCode, hexToRGBA } from "@/lib/utils";
-import { useMutation } from "@apollo/client";
+import type { Lists, Tags } from "@/hooks/useRoutes";
 import { useSuspendSession } from "@/hooks/useSuspendSession";
-import { GET_TASKS } from "@/components/taskList";
+import { useMutation } from "@apollo/client";
+import {
+    GetCategoriesDocument,
+    GetTasksDocument,
+    InsertIntoTaskListsDocument,
+    InsertIntoTasksDocument,
+    InsertIntoTaskTagsDocument,
+} from "@/gql/graphql";
+import { convertEmojiFromCode, hexToRGBA } from "@/lib/utils";
+import { Listbox } from "@headlessui/react";
+import Modal from "@/components/modal/modal";
 import Input from "@/components/ui/input";
-
-const CREATE_TASK_MUTATION = gql(`
-    mutation insertIntoTasks($type: TasksInsertInput!) {
-        insertIntoTasksCollection(objects: [$type]) {
-        affectedCount
-        records {
-          id
-        }
-      }
-  }
-`);
-
-const ADD_LISTS_TO_TASK_MUTATION = gql(`
-    mutation insertIntoTaskLists($type: [TaskListsInsertInput!]!) {
-        insertIntoTaskListsCollection(objects: $type) {
-        affectedCount
-        records {
-          id
-        }
-      }
-  }
-`);
-
-const ADD_TAGS_TO_TASK_MUTATION = gql(`
-    mutation insertIntoTaskTags($type: [TaskTagsInsertInput!]!) {
-        insertIntoTaskTagsCollection(objects: $type) {
-        affectedCount
-        records {
-          id
-        }
-      }
-  }
-`);
-
-type ActionType =
-    | { type: "changeList"; payload: Record<string, string>[] }
-    | { type: "changeTag"; payload: Record<string, string>[] }
-    | { type: "changeTitle"; payload: string }
-    | {
-          type: "changeDescription";
-          payload: string;
-      };
-
-const initialState: {
-    lists: Record<string, string>[];
-    tags: Record<string, string>[];
-    title: string;
-    description: string;
-} = {
-    lists: [],
-    tags: [],
-    title: "",
-    description: "",
-};
-
-function taskReducer(state: typeof initialState, action: ActionType) {
-    const { type, payload } = action;
-    switch (type) {
-        case "changeList": {
-            return {
-                ...state,
-                lists: [...payload],
-            };
-        }
-
-        case "changeTag": {
-            return {
-                ...state,
-                tags: [...payload],
-            };
-        }
-        case "changeTitle": {
-            return {
-                ...state,
-                title: payload,
-            };
-        }
-        case "changeDescription": {
-            return {
-                ...state,
-                description: payload,
-            };
-        }
-        default:
-            return state;
-    }
-}
+import { taskReducer, taskReducerInitialState } from "@/reducers/taskReducer";
 
 const TaskModal = () => {
     const { isOpen, setIsOpen } = useContext(TaskContext);
-    const { data, loading, error } = useAuthQuery(GET_CATEGORIES);
-    const [state, dispatch] = useReducer(taskReducer, initialState);
-    const [addTask] = useMutation(CREATE_TASK_MUTATION);
-    const [addLists] = useMutation(ADD_LISTS_TO_TASK_MUTATION);
-    const [addTags] = useMutation(ADD_TAGS_TO_TASK_MUTATION, {
-        refetchQueries: [GET_TASKS, "GetTasks"],
-    });
-
+    const [state, dispatch] = useReducer(taskReducer, taskReducerInitialState);
     const session = useSuspendSession();
+
+    const { data, loading, error } = useAuthQuery(GetCategoriesDocument);
+    const [addTask] = useMutation(InsertIntoTasksDocument);
+    const [addLists] = useMutation(InsertIntoTaskListsDocument);
+    const [addTags] = useMutation(InsertIntoTaskTagsDocument, {
+        refetchQueries: [GetTasksDocument, "GetTasks"],
+    });
 
     if (error) {
         console.log(error.message);

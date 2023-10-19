@@ -4,8 +4,8 @@ import { AiOutlineCalendar } from "react-icons/ai";
 import { IoTodayOutline } from "react-icons/io5";
 import { RiFileList3Line } from "react-icons/ri";
 import { useSuspendSession } from "@/hooks/useSuspendSession";
-import { gql } from "@/gql";
 import { useQuery } from "@apollo/client";
+import { GetCategoriesDocument } from "@/gql/graphql";
 
 export type Lists = {
     node: {
@@ -23,37 +23,12 @@ export type Tags = {
     };
 };
 
-export const GET_CATEGORIES = gql(
-    `
-    query GetCategories($userId: UUID!) {
-        listsCollection(filter: { user_id: { eq: $userId } }) {
-            edges {
-                node {
-                    id
-                    name
-                    img
-                }
-            }
-        }
-        tagsCollection(filter: { user_id: { eq: $userId } }) {
-            edges {
-                node {
-                    id
-                    name
-                    color
-                }
-            }
-        }
-    }
-`,
-);
-
 export const useRoutes = () => {
     const pathname = usePathname();
     const searchParams = useSearchParams()!;
     const session = useSuspendSession();
 
-    const { loading, error, data } = useQuery(GET_CATEGORIES, {
+    const { loading, error, data } = useQuery(GetCategoriesDocument, {
         variables: { userId: session?.user.id },
     });
 

@@ -1,0 +1,20 @@
+query GetCategories($userId: UUID!) {
+    listsCollection(filter: { user_id: { eq: $userId } }) {
+        edges {
+            node {
+                id
+                name
+                img
+            }
+        }
+    }
+    tagsCollection(filter: { user_id: { eq: $userId } }) {
+        edges {
+            node {
+                id
+                name
+                color
+            }
+        }
+    }
+}

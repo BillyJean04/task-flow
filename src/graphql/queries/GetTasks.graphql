@@ -1,0 +1,33 @@
+query GetTasks($userId: UUID!) {
+    tasksCollection(filter: { user_id: { eq: $userId } }) {
+        edges {
+            cursor
+            node {
+                title
+                description
+                taskListsCollection {
+                    edges {
+                        cursor
+                        node {
+                            lists {
+                                img
+                                name
+                            }
+                        }
+                    }
+                }
+                taskTagsCollection {
+                    edges {
+                        cursor
+                        node {
+                            tags {
+                                color
+                                name
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

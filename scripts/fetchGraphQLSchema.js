@@ -33,7 +33,7 @@ function fetchGraphQLSchema(url, options) {
         });
 }
 
-const filePath = path.join(__dirname, "../graphql/schema/", "schema.graphql");
+const filePath = path.join(__dirname, "../src/graphql/schema/", "schema.graphql");
 
 fetchGraphQLSchema(`${process.env.NEXT_PUBLIC_SUPABASE_URL}/graphql/v1`, {
     readable: true,

@@ -1,0 +1,8 @@
+mutation insertIntoTaskTags($type: [TaskTagsInsertInput!]!) {
+    insertIntoTaskTagsCollection(objects: $type) {
+        affectedCount
+        records {
+            id
+        }
+    }
+}

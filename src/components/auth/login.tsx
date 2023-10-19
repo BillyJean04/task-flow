@@ -6,14 +6,16 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 const Login = () => {
-    const { user } = Auth.useUser();
     const supabaseClient = useSupabaseClient();
     const router = useRouter();
+    const { user } = Auth.useUser();
+
     useEffect(() => {
         if (user) {
             router.push("/dashboard/all-tasks");
         }
     }, [router, user]);
+
     return (
         <div className="flex justify-center items-center bg-[#f6f5f8] h-[100dvh] ">
             <div>
