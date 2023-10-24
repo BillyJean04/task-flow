@@ -18,6 +18,7 @@ import { Listbox } from "@headlessui/react";
 import Modal from "@/components/modal/modal";
 import Input from "@/components/ui/input";
 import { taskReducer, taskReducerInitialState } from "@/reducers/taskReducer";
+import Button from "@/components/ui/button";
 
 const TaskModal = () => {
     const { isOpen, setIsOpen } = useContext(TaskContext);
@@ -166,9 +167,7 @@ const TaskModal = () => {
                 value={state.description}
                 onChange={(event) => dispatch({ type: "changeDescription", payload: event.target.value })}
             />
-            <button onClick={() => createTask()} className="bg-[#90beff] p-3 font-medium rounded-2xl">
-                Create Task
-            </button>
+            <Button onClick={() => createTask()}>Create Task</Button>
         </div>
     );
 
