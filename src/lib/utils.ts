@@ -1,3 +1,10 @@
+import clsx, { ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+export function cn(...inputs: ClassValue[]) {
+    return twMerge(clsx(inputs));
+}
+
 export function convertEmojiFromCode(code: string): string {
     return String.fromCodePoint(Number(`0x${code}`));
 }
