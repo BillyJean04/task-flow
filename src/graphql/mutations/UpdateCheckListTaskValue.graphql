@@ -1,0 +1,8 @@
+mutation UpdateCheckListTaskValue($value: String!, $taskId: BigInt!) {
+    updateChecklistsCollection(
+        set: {item_text: $value}
+        filter: {checklist_id: {eq: $taskId}}
+    ) {
+        affectedCount
+    }
+}

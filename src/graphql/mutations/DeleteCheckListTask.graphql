@@ -1,0 +1,7 @@
+mutation DeleteCheckListTask($taskId: BigInt!) {
+    deleteFromChecklistsCollection(
+        filter: {checklist_id: {eq: $taskId}}
+    ) {
+        affectedCount
+    }
+}

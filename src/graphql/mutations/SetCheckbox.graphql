@@ -1,0 +1,6 @@
+mutation SetCheckBoxValue($id: BigInt, $value: Boolean) {
+    updateChecklistsCollection(filter: {checklist_id: {eq: $id}}, set: {completed: $value}) {
+        affectedCount,
+
+    }
+}

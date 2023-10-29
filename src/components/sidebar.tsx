@@ -1,48 +1,23 @@
 "use client";
 
 import { FC } from "react";
-import Link from "next/link";
 import { AiOutlineCheckCircle } from "react-icons/ai";
 import { BsTrash } from "react-icons/bs";
 import { useQueryString } from "@/hooks/useQueryString";
 import { useRoutes } from "@/hooks/useRoutes";
-import { usePathname, useRouter } from "next/navigation";
 import SkeletonRectangle from "@/components/skeleton";
 import { PiTagChevron } from "react-icons/pi";
 
 const Sidebar: FC = () => {
     const { routes, loading, error } = useRoutes();
-    const pathname = usePathname();
-    const router = useRouter();
     const queryString = useQueryString();
-
-    if (pathname === "/dashboard" || pathname === "/dashboard/") {
-        router.push("/dashboard/all-tasks");
-    }
 
     if (error) {
         console.log(error.message);
     }
     return (
         <div className="inline-flex flex-col p-6 gap-5">
-            <div className="flex flex-col gap-3">
-                {routes.map((route) =>
-                    route.main.map(({ label, href, icon: Icon, active }) => {
-                        return (
-                            <Link key={label} href={href}>
-                                <div
-                                    className={`${
-                                        active ? "border-r-2 border-[#71acff] text-[#414141] font-bold" : null
-                                    } items-center text-[#414141] gap-3 pr-4 flex cursor-pointer`}
-                                >
-                                    <Icon size="1.2rem" />
-                                    {label}
-                                </div>
-                            </Link>
-                        );
-                    }),
-                )}
-            </div>
+            <div>Task Flow</div>
             <div className="flex flex-col gap-2">
                 <h5 className="font-[600]">Lists</h5>
                 <div className="flex flex-col gap-2 ">

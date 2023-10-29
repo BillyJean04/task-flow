@@ -1,10 +1,8 @@
-import { usePathname, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useMemo } from "react";
-import { AiOutlineCalendar } from "react-icons/ai";
-import { IoTodayOutline } from "react-icons/io5";
-import { RiFileList3Line } from "react-icons/ri";
+import { useSuspendSession } from "@/hooks/useSuspendSession";
+import { useQuery } from "@apollo/client";
 import { GetCategoriesDocument } from "@/gql/graphql";
-import { useAuthQuery } from "@/hooks/useAuthQuery";
 
 export type Lists = {
     node: {
@@ -23,9 +21,11 @@ export type Tags = {
 };
 
 export const useRoutes = () => {
-    const pathname = usePathname();
     const searchParams = useSearchParams()!;
-    const { loading, error, data } = useAuthQuery(GetCategoriesDocument);
+    const session = useSuspendSession();
+    const { loading, error, data } = useQuery(GetCategoriesDocument, {
+        variables: { userId: session?.user.id },
+    });
 
     const lists: Lists[] = useMemo(() => {
         if (!loading) {
@@ -44,26 +44,6 @@ export const useRoutes = () => {
     const routes = useMemo(
         () => [
             {
-                main: [
-                    {
-                        label: "All tasks",
-                        href: "/dashboard/all-tasks",
-                        icon: AiOutlineCalendar,
-                        active: pathname === "/dashboard/all-tasks",
-                    },
-                    {
-                        label: "Today",
-                        href: "/dashboard/today",
-                        icon: IoTodayOutline,
-                        active: pathname === "/dashboard/today",
-                    },
-                    {
-                        label: "Tomorrow",
-                        href: "/dashboard/tomorrow",
-                        icon: RiFileList3Line,
-                        active: pathname === "/dashboard/tomorrow",
-                    },
-                ],
                 lists: lists?.map((list) => {
                     return {
                         label: list.node.name,
@@ -83,7 +63,7 @@ export const useRoutes = () => {
             },
         ],
 
-        [pathname, searchParams, tags, lists],
+        [searchParams, tags, lists],
     );
     return {
         routes,

@@ -3,8 +3,8 @@ import type { Metadata } from "next";
 import { Open_Sans } from "next/font/google";
 import { SupabaseProvider } from "@/lib/supabase";
 import { ApolloGraphqlProvider } from "@/lib/apollo";
-import TaskModalProvider from "@/contexts/taskModalContext";
 import { ReactNode } from "react";
+import TaskModalProvider from "@/contexts/taskModalContext";
 
 const openSans = Open_Sans({ subsets: ["latin"] });
 
