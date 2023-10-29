@@ -4,7 +4,6 @@ import { useContext, useReducer } from "react";
 import { TaskContext } from "@/contexts/taskModalContext";
 import { useAuthQuery } from "@/hooks/useAuthQuery";
 import type { Lists, Tags } from "@/hooks/useRoutes";
-import { useSuspendSession } from "@/hooks/useSuspendSession";
 import { useMutation } from "@apollo/client";
 import {
     GetCategoriesDocument,
@@ -19,11 +18,12 @@ import Modal from "@/components/modal/modal";
 import Input from "@/components/ui/input";
 import { taskReducer, taskReducerInitialState } from "@/reducers/taskReducer";
 import Button from "@/components/ui/button";
+import { useLazySession } from "@/hooks/useLazySession";
 
 const TaskModal = () => {
     const { isOpen, setIsOpen } = useContext(TaskContext);
     const [state, dispatch] = useReducer(taskReducer, taskReducerInitialState);
-    const session = useSuspendSession();
+    const { session } = useLazySession();
 
     const { data, loading, error } = useAuthQuery(GetCategoriesDocument);
     const [addTask] = useMutation(InsertIntoTasksDocument);

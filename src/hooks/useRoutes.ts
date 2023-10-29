@@ -3,9 +3,8 @@ import { useMemo } from "react";
 import { AiOutlineCalendar } from "react-icons/ai";
 import { IoTodayOutline } from "react-icons/io5";
 import { RiFileList3Line } from "react-icons/ri";
-import { useSuspendSession } from "@/hooks/useSuspendSession";
-import { useQuery } from "@apollo/client";
 import { GetCategoriesDocument } from "@/gql/graphql";
+import { useAuthQuery } from "@/hooks/useAuthQuery";
 
 export type Lists = {
     node: {
@@ -26,11 +25,7 @@ export type Tags = {
 export const useRoutes = () => {
     const pathname = usePathname();
     const searchParams = useSearchParams()!;
-    const session = useSuspendSession();
-
-    const { loading, error, data } = useQuery(GetCategoriesDocument, {
-        variables: { userId: session?.user.id },
-    });
+    const { loading, error, data } = useAuthQuery(GetCategoriesDocument);
 
     const lists: Lists[] = useMemo(() => {
         if (!loading) {

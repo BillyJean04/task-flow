@@ -23,7 +23,6 @@ const Sidebar: FC = () => {
     if (error) {
         console.log(error.message);
     }
-
     return (
         <div className="inline-flex flex-col p-6 gap-5">
             <div className="flex flex-col gap-3">
