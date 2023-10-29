@@ -5,7 +5,6 @@ import { SupabaseProvider } from "@/lib/supabase";
 import { ApolloGraphqlProvider } from "@/lib/apollo";
 import TaskModalProvider from "@/contexts/taskModalContext";
 import { ReactNode } from "react";
-import TaskModal from "@/components/modal/taskModal";
 
 const openSans = Open_Sans({ subsets: ["latin"] });
 
@@ -20,10 +19,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <ApolloGraphqlProvider>
                 <TaskModalProvider>
                     <html lang="en">
-                        <body className={openSans.className}>
-                            <TaskModal />
-                            {children}
-                        </body>
+                        <body className={openSans.className}>{children}</body>
                     </html>
                 </TaskModalProvider>
             </ApolloGraphqlProvider>
