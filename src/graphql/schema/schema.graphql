@@ -46,7 +46,7 @@ type Checklists implements Node {
   checklist_id: BigInt!
   task_id: BigInt
   item_text: String!
-  completed: Boolean
+  completed: Boolean!
   tasks: Tasks
 }
 
@@ -899,6 +899,7 @@ type Tasks implements Node {
   description: String
   completed: Boolean
   created_at: Datetime!
+  uuid: UUID!
   taskTagsCollection(
     """Query the first `n` records in the collection"""
     first: Int
@@ -983,6 +984,7 @@ input TasksFilter {
   description: StringFilter
   completed: BooleanFilter
   created_at: DatetimeFilter
+  uuid: UUIDFilter
   nodeId: IDFilter
 }
 
@@ -992,6 +994,7 @@ input TasksInsertInput {
   description: String
   completed: Boolean
   created_at: Datetime
+  uuid: UUID
 }
 
 type TasksInsertResponse {
@@ -1009,6 +1012,7 @@ input TasksOrderBy {
   description: OrderByDirection
   completed: OrderByDirection
   created_at: OrderByDirection
+  uuid: OrderByDirection
 }
 
 input TasksUpdateInput {
@@ -1017,6 +1021,7 @@ input TasksUpdateInput {
   description: String
   completed: Boolean
   created_at: Datetime
+  uuid: UUID
 }
 
 type TasksUpdateResponse {

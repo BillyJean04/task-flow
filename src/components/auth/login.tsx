@@ -3,19 +3,15 @@
 import { Auth } from "@supabase/auth-ui-react";
 import { useSupabaseClient } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 const Login = () => {
     const supabaseClient = useSupabaseClient();
     const router = useRouter();
     const { user } = Auth.useUser();
 
-    useEffect(() => {
-        if (user) {
-            router.push("/dashboard/all-tasks");
-        }
-    }, [router, user]);
-
+    if (user !== null) {
+        router.replace("/dashboard");
+    }
     return (
         <div className="flex justify-center items-center bg-[#f6f5f8] h-[100dvh] ">
             <div>

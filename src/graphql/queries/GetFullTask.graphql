@@ -1,11 +1,11 @@
-query GetTasks($userId: UUID!) {
-    tasksCollection(filter: { user_id: { eq: $userId } }) {
+query GetFullTask($uuid: UUID!) {
+    tasksCollection(filter: { uuid: { eq: $uuid } }) {
         edges {
             cursor
             node {
+                id
                 title
                 description
-                uuid
                 completed
                 taskListsCollection {
                     edges {
@@ -26,6 +26,16 @@ query GetTasks($userId: UUID!) {
                                 color
                                 name
                             }
+                        }
+                    }
+                }
+                checklistsCollection {
+                    edges {
+                        cursor
+                        node {
+                            checklist_id
+                            item_text
+                            completed
                         }
                     }
                 }

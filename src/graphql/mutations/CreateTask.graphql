@@ -3,6 +3,7 @@ mutation insertIntoTasks($type: TasksInsertInput!) {
         affectedCount
         records {
             id
+            uuid
         }
     }
 }
