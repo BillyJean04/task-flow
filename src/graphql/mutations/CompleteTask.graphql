@@ -1,0 +1,8 @@
+mutation CompleteTask($taskId: BigInt!) {
+    updateTasksCollection(
+        set: {completed: true}
+        filter: {id: {eq: $taskId}}
+    ) {
+        affectedCount
+    }
+}

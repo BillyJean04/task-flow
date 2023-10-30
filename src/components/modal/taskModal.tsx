@@ -4,6 +4,7 @@ import { useContext, useReducer } from "react";
 import { TaskContext } from "@/contexts/taskModalContext";
 import { useAuthQuery } from "@/hooks/useAuthQuery";
 import type { Lists, Tags } from "@/hooks/useRoutes";
+import { useSuspendSession } from "@/hooks/useSuspendSession";
 import { useMutation } from "@apollo/client";
 import {
     GetCategoriesDocument,
@@ -18,15 +19,13 @@ import Modal from "@/components/modal/modal";
 import Input from "@/components/ui/input";
 import { taskReducer, taskReducerInitialState } from "@/reducers/taskReducer";
 import Button from "@/components/ui/button";
-import { useLazySession } from "@/hooks/useLazySession";
 
 const TaskModal = () => {
     const { isOpen, setIsOpen } = useContext(TaskContext);
     const [state, dispatch] = useReducer(taskReducer, taskReducerInitialState);
-    const { session } = useLazySession();
-
+    const session = useSuspendSession();
     const { data, loading, error } = useAuthQuery(GetCategoriesDocument);
-    const [addTask] = useMutation(InsertIntoTasksDocument);
+    const [addTask] = useMutation(InsertIntoTasksDocument, { refetchQueries: [GetTasksDocument, "GetTasks"] });
     const [addLists] = useMutation(InsertIntoTaskListsDocument);
     const [addTags] = useMutation(InsertIntoTaskTagsDocument, {
         refetchQueries: [GetTasksDocument, "GetTasks"],
@@ -50,7 +49,6 @@ const TaskModal = () => {
                 },
             },
         });
-
         const listsToAdd = state.lists.map((list) => ({
             task_id: initialTask.data?.insertIntoTasksCollection?.records[0].id,
             list_id: list.id,
@@ -61,18 +59,19 @@ const TaskModal = () => {
             tag_id: tag.id,
         }));
 
-        await addLists({
-            variables: {
-                type: listsToAdd,
-            },
-        });
+        tagsToAdd.length !== 0 &&
+            (await addLists({
+                variables: {
+                    type: listsToAdd,
+                },
+            }));
 
-        await addTags({
-            variables: {
-                type: tagsToAdd,
-            },
-        });
-
+        tagsToAdd.length !== 0 &&
+            (await addTags({
+                variables: {
+                    type: tagsToAdd,
+                },
+            }));
         setIsOpen(false);
     };
 

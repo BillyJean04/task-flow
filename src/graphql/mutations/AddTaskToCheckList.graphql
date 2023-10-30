@@ -1,0 +1,5 @@
+mutation AddTaskToCheckList($value: [ChecklistsInsertInput!]!) {
+    insertIntoChecklistsCollection(objects: $value) {
+        affectedCount
+    }
+}

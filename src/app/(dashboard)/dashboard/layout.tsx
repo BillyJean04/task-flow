@@ -1,6 +1,7 @@
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 import Sidebar from "@/components/sidebar";
 import TaskModal from "@/components/modal/taskModal";
+import Taskbar from "@/components/taskbar";
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
     return (
@@ -8,6 +9,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
             <TaskModal />
             <Sidebar />
             {children}
+            <Taskbar />
         </div>
     );
 }

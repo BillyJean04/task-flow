@@ -2,13 +2,25 @@
 
 import { convertEmojiFromCode, hexToRGBA } from "@/lib/utils";
 import { Tasks } from "@/gql/graphql";
+import Link from "next/link";
+import { usePathname, useSearchParams } from "next/navigation";
 
 const TaskBox = (props: { task: Tasks }) => {
     const list = props.task.taskListsCollection?.edges[0];
     const tag = props.task.taskTagsCollection?.edges[0];
+    const searchParams = useSearchParams();
+    const pathname = usePathname();
 
     return (
-        <div className="flex flex-col gap-2 p-4 rounded-[10px] bg-white w-[250px] border-2 border-[transparent] cursor-pointer hover:border-[#90beff]">
+        <Link
+            style={props.task.uuid === pathname.split("/")[2] ? { borderColor: "#90beff" } : {}}
+            href={
+                pathname === "/dashboard"
+                    ? `dashboard/${props.task.uuid}?${searchParams}`
+                    : `${props.task.uuid}?${searchParams}`
+            }
+            className="flex flex-col gap-2 p-4 rounded-[10px] bg-white w-[250px] border-2 border-[transparent] cursor-pointer hover:border-[#90beff]"
+        >
             <div className="flex gap-4">
                 {
                     <>
@@ -36,7 +48,7 @@ const TaskBox = (props: { task: Tasks }) => {
             </div>
             <div className="text-[1.1rem] font-bold">{props.task.title}</div>
             <div className="text-[0.95rem] text-gray-600">{props.task.description}</div>
-        </div>
+        </Link>
     );
 };
 
